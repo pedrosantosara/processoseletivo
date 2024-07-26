@@ -1,0 +1,93 @@
+<div class="container py-5">
+  <h2>Items Encontrados</h2>
+
+  <div class="mb-3">
+    <button type="button" class="btn btn-primary" (click)="toggleModal()">
+      Adicionar Item
+    </button>
+
+
+    <div *ngIf="showModal" class="modal-add-item">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Adicionar Novo Item</h5>
+            <button type="button" class="close" aria-label="Close" (click)="onModalClose()">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <app-items-form (itemAdded)="addItem($event)" (closeModal)="onModalClose()">
+            </app-items-form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="table-responsive">
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>titulo</th>
+          <th>Categoria</th>
+          <th>Descrição</th>
+          <th>Foto</th>
+          <th>preço</th>
+          <th>deletar</th>
+          <th>editar</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for(item of items; track item.id){
+        <tr>
+          <td>{{ item.title }}</td>
+          <td>{{ item.category }}</td>
+          <td>{{ item.description }}</td>
+          <td>
+            <img *ngIf="getImageUrl(item.id)" [src]="getImageUrl(item.id)" alt="{{ item.title }}" width="100"
+              height="100" />
+          </td>
+          <td>{{ item.price | currency:'BRL' }}</td>
+          <td>
+            <button (click)="confirmDelete(item.id)" class="btn btn-danger">Apagar</button>
+          </td>
+          <td><button (click)="editItem(item)" class="btn btn-warning">Editar</button></td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+
+
+  <div *ngIf="showEditModal" class="modal-base">
+    <div class="modal-dialog" role="document">
+      <app-items-edit [item]="itemToEdit" (itemUpdated)="onItemUpdated($event)" (closeModal)="onEditModalClose()">
+      </app-items-edit>
+    </div>
+  </div>
+
+  <div *ngIf="showDeleteConfirmation" class="modal-delete-confirmation">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Confirmação de Exclusão</h5>
+          <button type="button" class="close" aria-label="Close" (click)="cancelDelete()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          Tem certeza de que deseja apagar este item?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="cancelDelete()">
+            Cancelar
+          </button>
+          <button type="button" class="btn btn-danger" (click)="deleteItem()">
+            Apagar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>

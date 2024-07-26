@@ -1,0 +1,29 @@
+<div class="modal-content">
+  <div class="modal-header">
+  </div>
+  <div class="modal-body">
+    <form #itemForm="ngForm" (ngSubmit)="addItem()">
+      <div class="form-group">
+        <label for="title">Título:</label>
+        <input type="text" id="title" [(ngModel)]="newItem.title" name="title" class="form-control" required>
+      </div>
+      <div class="form-group">
+        <label for="description">Descrição:</label>
+        <textarea id="description" [(ngModel)]="newItem.description" name="description" class="form-control" required></textarea>
+      </div>
+      <div class="form-group">
+        <label for="category">Categoria:</label>
+        <input type="text" id="category" [(ngModel)]="newItem.category" name="category" class="form-control" required>
+      </div>
+      <div class="form-group">
+        <label for="price">Preço:</label>
+        <input type="number" id="price" [(ngModel)]="newItem.price" name="price" class="form-control" required>
+      </div>
+      <div class="form-group">
+        <label for="image">Imagem:</label>
+        <input type="file" (change)="onFileSelected($event)" class="form-control-file" required>
+      </div>
+      <button type="submit" class="btn btn-primary" [disabled]="!itemForm.form.valid">Adicionar</button>
+    </form>
+  </div>
+</div>

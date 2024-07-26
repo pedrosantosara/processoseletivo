@@ -1,0 +1,26 @@
+<div class="container">
+    <div class="row justify-content-center align-items-center min-vh-100">
+        <div class="col-md-8 col-lg-6 col-xl-4">
+            <div class="card shadow-lg p-4">
+                <div class="card-body">
+                    <h2 class="card-title text-center mb-4">{{ 'Login' }}</h2>
+                    <app-login-layout primaryBtnText="Login" secondaryBtnText="Registre-se" (submit)="submit()"
+                        (navigate)="navigate()" [disablePrimaryBtn]="!loginForm.valid">
+                        <form [formGroup]="loginForm" (ngSubmit)="submit()">
+                            <div class="mb-3">
+                                <app-input-acess formControlName="username" inputName="username" type="text"
+                                    label="Username" class="form-control">
+                                </app-input-acess>
+                            </div>
+                            <div class="mb-3">
+                                <app-input-acess formControlName="password" inputName="password" type="password"
+                                    label="Password" class="form-control">
+                                </app-input-acess>
+                            </div>
+                        </form>
+                    </app-login-layout>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

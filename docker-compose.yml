@@ -1,0 +1,59 @@
+services:
+  frontend:
+    build:
+      context: ./items-page
+      dockerfile: Dockerfile
+    ports:
+      - "4200:80"
+    networks:
+      - minha_rede
+    depends_on:
+      - backend
+
+  backend:
+    build:
+      context: ./app-cadastro
+      dockerfile: Dockerfile
+    command: sh -c "java -jar /app/app.jar"
+    restart: on-failure
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://database:5432/bd_app_cadastro
+      SPRING_DATASOURCE_USERNAME: admin
+      SPRING_DATASOURCE_PASSWORD: admin
+      SPRING_DATASOURCE_INITIALIZATION_MODE: always
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_PROPERTIES_HIBERNATE_GENERATE_STATISTICS: true
+    env_file: .env
+    networks:
+      - minha_rede
+    depends_on:
+      database:
+        condition: service_healthy
+  database:
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_INITDB_ARGS: "--encoding=UTF8 --locale=en_US.UTF-8"
+    env_file: .env
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+networks:
+  minha_rede:
+    driver: bridge
+
+volumes:
+  postgres-data:
